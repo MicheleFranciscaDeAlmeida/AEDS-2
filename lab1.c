@@ -1,10 +1,13 @@
 #include <stdio.h>
 
 int contChar(char str[]) {
-    int i;
+    int i, cont = 0;
     for(i = 0; str[i] != '\0'; i++) {
+        if(str[i] >= 'A' && str[i] <= 'Z') {
+            cont++;
+        }
     }
-    return i;
+    return cont;
 }
 
 int main() {
