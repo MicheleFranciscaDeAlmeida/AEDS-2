@@ -10,12 +10,11 @@ int contChar(char str[]) {
 int main() {
     char pa[100];
     scanf(" %[^\n]", pa); 
-    printf("%d", contChar(pa));
 
     while(!(pa[0] == 'F' && pa[1] == 'I' && pa[2] == 'M' && pa[3] == '\0')) {
+        printf("%d\n", contChar(pa));
         scanf(" %[^\n]", pa);
-        printf("%d", contChar(pa));
 
     }
-    return 0; 
+    return 0;
 }
