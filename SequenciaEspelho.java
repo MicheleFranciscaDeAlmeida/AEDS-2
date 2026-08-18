@@ -14,19 +14,19 @@ while (scanner.hasNextLine()) {
     int B = Integer.parseInt(numeros[1]);
 
 //Construção da sequencia crescente
-StringBuilder sequenciaCrescente = new StringBuilder();
+String sequenciaCrescente = "";
 for (int i = A; i <= B; i++) {
-    sequenciaCrescente.append(i);
+    sequenciaCrescente += i;
    } 
 
 //Construcao da sequencia espelhada
-StringBuilder sequenciaEspelhada = new StringBuilder();
+String sequenciaEspelhada = "";
 for (int i = sequenciaCrescente.length() - 1; i >= 0; i--) {
-    sequenciaEspelhada.append(sequenciaCrescente.charAt(i));
+    sequenciaEspelhada += sequenciaCrescente.charAt(i);
 }
 
 //Impressao da sequencia espelho
-System.out.println(sequenciaCrescente.toString() + sequenciaEspelhada.toString());
+System.out.println(sequenciaCrescente + sequenciaEspelhada);
     }
 
 scanner.close();
