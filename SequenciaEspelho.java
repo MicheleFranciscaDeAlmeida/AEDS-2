@@ -32,3 +32,9 @@ System.out.println(sequenciaCrescente + sequenciaEspelhada);
 scanner.close();
   }
 }
+
+/*
+Uso de IA: ChatGPT utilizado como ferramenta de apoio ao estudo,
+esclarecimento de dúvidas, pesquisa de documentação e depuração.
+A implementação e as decisões sobre o código foram realizadas pela aluna.
+*/
