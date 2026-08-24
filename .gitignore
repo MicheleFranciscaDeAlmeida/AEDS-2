@@ -1,0 +1,16 @@
+# Java - arquivos compilados
+*.class
+
+# C/C++ - executáveis compilados
+exec
+lab1
+combinador
+
+# Arquivos de entrada e saída usados nos testes
+entrada.txt
+saida.txt
+entrada_espelho.txt
+entrada_stringjava.txt
+saida_stringjava.txt
+saida_espelho.txt
+.entrada_stringjava.txt
