@@ -2,7 +2,7 @@ import java.util.Scanner;
 
 public class CiframentoCesar {
 
-    // Recebe uma String e retorna a mesma String com as letras deslocadas 3 posições.
+    // Recebe uma String e retorna uma nova String com as letras deslocadas 3 posições.
     public static String cifrar(String texto) {
     String resultado = "";
     
