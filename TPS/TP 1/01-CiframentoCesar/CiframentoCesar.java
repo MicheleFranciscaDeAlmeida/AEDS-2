@@ -46,3 +46,14 @@ public class CiframentoCesar {
         scanner.close();
     }
 }
+
+/*
+ * Uso de IA:
+ * A ferramenta de Inteligência Artificial foi utilizada como apoio
+ * para fundamentação, documentação e compreensão do enunciado,
+ * auxiliando na análise da lógica e na revisão do código.
+ *
+ * A implementação foi desenvolvida a partir do meu próprio
+ * raciocínio e entendimento do problema, com testes e validação
+ * realizados por mim.
+ */
