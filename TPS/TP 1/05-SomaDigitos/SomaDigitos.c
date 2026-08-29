@@ -2,6 +2,7 @@
 #include <stdlib.h>
 
 int SomaDigitos(int num) {
+    // Variável que acumula a soma dos dígitos
     int soma = 0; 
 
     // Trata números negativos convertendo-os para positivos
