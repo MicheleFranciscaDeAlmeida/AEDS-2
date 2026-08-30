@@ -1,23 +1,23 @@
 public class SomaDigitosRecursiva {
 
-    // Método público: trata sinal negativo antes de iniciar a recursão
+    // Método público que inicia a recursão
     public static int somaDigitos(int num) {
-        // Garante que trabalhamos apenas com positivos na recursão
+        // Trata números negativos
         if (num < 0) {
             num = -num;
         }
         return somaDigitos(num, 0);
     }
 
-    // Método privado/recursivo: acumula a soma
+    // Método recursivo que acumula a soma dos dígitos
     private static int somaDigitos(int num, int soma) {
         int resp;
 
-        // Caso base: não há mais dígitos para processar
+        // Caso base
         if (num == 0) {
             resp = soma;
         } else {
-            // Passo recursivo: extrai último dígito e avança
+            // Soma o último dígito e reduz o número
             resp = somaDigitos(num / 10, soma + (num % 10));
         }
 
