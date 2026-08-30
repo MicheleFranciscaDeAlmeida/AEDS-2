@@ -128,15 +128,8 @@ int isReal(char s[]) {
         
         i++;
     }
-
-    // Regras para ser Real:
-    // 1. No máximo um separador
-    // 2. Deve ter pelo menos um dígito
-    // 3. Não pode terminar com separador se não houver dígitos depois? 
-    //    O enunciado Java original era permissivo, mas vamos seguir a lógica de "número válido".
-    //    Geralmente "12." é considerado real em muitas implementações simples, mas ".12" também.
-    //    O principal é ter dígitos e no máximo um separador.
     
+    // Verifica se há mais de um separador ou nenhum dígito. 
     if (pontosE_virgulas > 1 || digitosEncontrados == 0) {
         resultado = 0;
     }
