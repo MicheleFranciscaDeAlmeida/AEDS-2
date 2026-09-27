@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import java.util.Locale;
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -217,23 +218,63 @@ class Veiculo {
 		return String.format(Locale.US,"[%d ## %s ## %s ## %d ## %s ## [%s] ## %d ## %.1f ## %s ## %s ## %.2f ## %.2f ## %.1f ## %b ## %s]", id, marca, modelo, ano, categoria, combStr, cilindros, cilindrada, transmissao, tracao, consumoCidade, consumoEstrada, co2, turbo, (dataRegistro != null ? dataRegistro.format() : "N/A" )); 
 	}
 
-	// Implementacao de InsertionSort
-	public static void insertionSort(Veiculo[] veiculos, int n) {
-	for (int i = 1; i < n; i++) {
-		Veiculo chave = veiculos[i];
+	// InsertionSort usado dentro de cada balde 
+	private static void insertionSortBalde(ArrayList<Veiculo> balde) {
+	for (int i = 1; i < balde.size(); i++) {
+		Veiculo chave = balde.get(i);
 		int j = i - 1;
 
-		while (j >= 0 && veiculos[j].getMarca().compareTo(chave.getMarca()) > 0) {
-			veiculos[j + 1] = veiculos[j];
+		while (j >= 0 && balde.get(j).getCilindrada() > chave.getCilindrada()) {
+			balde.set(j + 1, balde.get(j));
 			j--;
 		}
 
-		veiculos[j + 1] = chave;
+		balde.set(j + 1, chave);
 	}
 
      }
-}
 
+     // Implementacao do Bucket Sort
+     public static void bucketSort(Veiculo[] veiculos, int n) {
+	     if (n <= 1) {
+		   return;
+
+     }
+
+     // Criacao dos 10 baldes
+     ArrayList<ArrayList<Veiculo>> baldes = new ArrayList<>();
+
+     for (int i = 0; i < 10; i++) {
+	     baldes.add(new ArrayList<>());
+     }
+
+     // Distribuicao dos veiculos nos baldes
+     for (int i = 0; i < n; i++) {
+	    int indice = (int) ((veiculos[i].getCilindrada() / 8.1) * 10);
+	   if (indice >= 10) {
+		  indice = 9;
+	   }
+
+	  baldes.get(indice).add(veiculos[i]);
+
+     } 
+
+     // Ordenacao de cada balde
+     for (int i = 0; i < 10; i++) {
+	     insertionSortBalde(baldes.get(i));
+     }
+
+     // Concatenacao dos baldes 
+     int posicao = 0;
+
+     for (int i = 0; i < 10; i++) {
+	     for (Veiculo v : baldes.get(i)) {
+		     veiculos[posicao] = v;
+		     posicao++;
+	     }
+	   }
+     }	     
+}
 
 
 
@@ -365,8 +406,8 @@ public class Main {
 			}
 		}
 
-			// Ordena os veiculos selecionados pela marca
-			Veiculo.insertionSort(veiculosSelecionados, quantidade);
+			// Ordena os veiculos selecionados por cilindrada usando o Bucket Sort
+			Veiculo.bucketSort(veiculosSelecionados, quantidade);
 
 			//Saida formatada
 			for (int i = 0; i < quantidade; i++) {

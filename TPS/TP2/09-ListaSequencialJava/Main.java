@@ -1,7 +1,7 @@
-import java.util.Locale;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.Locale;
 import java.util.Scanner;
 
 // Representa uma data com dia, mes e ano
@@ -215,25 +215,8 @@ class Veiculo {
 			}
 		}
 		return String.format(Locale.US,"[%d ## %s ## %s ## %d ## %s ## [%s] ## %d ## %.1f ## %s ## %s ## %.2f ## %.2f ## %.1f ## %b ## %s]", id, marca, modelo, ano, categoria, combStr, cilindros, cilindrada, transmissao, tracao, consumoCidade, consumoEstrada, co2, turbo, (dataRegistro != null ? dataRegistro.format() : "N/A" )); 
-	}
-
-	// Implementacao de InsertionSort
-	public static void insertionSort(Veiculo[] veiculos, int n) {
-	for (int i = 1; i < n; i++) {
-		Veiculo chave = veiculos[i];
-		int j = i - 1;
-
-		while (j >= 0 && veiculos[j].getMarca().compareTo(chave.getMarca()) > 0) {
-			veiculos[j + 1] = veiculos[j];
-			j--;
-		}
-
-		veiculos[j + 1] = chave;
-	}
-
-     }
+	}	
 }
-
 
 
 
@@ -320,60 +303,202 @@ public static Veiculo[] ler(String caminhoArquivo) {
 }
 
 
+class Lista {
+
+    private Veiculo[] array;
+    private int n;
+
+    public Lista() {
+        this.array = new Veiculo[100];
+        this.n = 0;
+    }
+
+    public void inserirInicio(Veiculo veiculo) {
+        if (n >= array.length) {
+            return;
+        }
+
+        for (int i = n; i > 0; i--) {
+            array[i] = array[i - 1];
+        }
+
+        array[0] = veiculo;
+        n++;
+    }
+
+    public void inserir(Veiculo veiculo, int posicao) {
+        if (n >= array.length || posicao < 0 || posicao > n) {
+            return;
+        }
+
+        for (int i = n; i > posicao; i--) {
+            array[i] = array[i - 1];
+        }
+
+        array[posicao] = veiculo;
+        n++;
+    }
+
+    public void inserirFim(Veiculo veiculo) {
+        if (n >= array.length) {
+            return;
+        }
+
+        array[n] = veiculo;
+        n++;
+    }
+
+    public Veiculo removerInicio() {
+        if (n == 0) {
+            return null;
+        }
+
+        Veiculo removido = array[0];
+
+        for (int i = 0; i < n - 1; i++) {
+            array[i] = array[i + 1];
+        }
+
+        n--;
+        array[n] = null;
+
+        return removido;
+    }
+
+    public Veiculo remover(int posicao) {
+        if (n == 0 || posicao < 0 || posicao >= n) {
+            return null;
+        }
+
+        Veiculo removido = array[posicao];
+
+        for (int i = posicao; i < n - 1; i++) {
+            array[i] = array[i + 1];
+        }
+
+        n--;
+        array[n] = null;
+
+        return removido;
+    }
+
+    public Veiculo removerFim() {
+        if (n == 0) {
+            return null;
+        }
+
+        n--;
+
+        Veiculo removido = array[n];
+        array[n] = null;
+
+        return removido;
+    }
+
+   public void mostrar() {
+    for (int i = 0; i < n; i++) {
+        System.out.println(array[i].format());
+    }
+    
+    }
+}
+
 
 public class Main {
-	public static void main(String[] args) {
+    public static void main(String[] args) {
 
-		//Carrega o dataset
-		Veiculo[] frota = LeitorCsv.ler("/tmp/veiculos.csv");
+        Veiculo[] frota = LeitorCsv.ler("/tmp/veiculos.csv");
 
-		if (frota.length == 0) {
-			System.out.println("Nenhum veiculo carregado.");
-			return;
-		}
+        Scanner sc = new Scanner(System.in);
 
-		// Criacao do array para armazenar os veiculos selecionados
-		Veiculo[] veiculosSelecionados = new Veiculo[frota.length];
-		int quantidade = 0;
+        Lista lista = new Lista();
 
-		//Leitura dos IDs da entrada padrao
-		Scanner sc = new Scanner(System.in);
+        // Leitura dos IDs iniciais.
+        while (sc.hasNextInt()) {
+            int idBusca = sc.nextInt();
 
-		while(sc.hasNextLine()) {
-			int idBusca = sc.nextInt();
+            if (idBusca == -1) {
+                break;
+            }
 
-			if (idBusca == -1) {
-				break;
-			}
+            for (Veiculo v : frota) {
+                if (v.getId() == idBusca) {
+                    lista.inserirFim(v);
+                    break;
+                }
+            }
+        }
 
-			//Pesquisa Sequencial
-			Veiculo encontrado = null;
+        // Quantidade de comandos.
+        int quantidadeComandos = sc.nextInt();
+        sc.nextLine();
 
-			for (Veiculo v : frota) {
-				if (v.getId() == idBusca) {
-					encontrado = v;
-					break;
-				}
-			   }
+        for (int i = 0; i < quantidadeComandos; i++) {
 
-			if (encontrado != null) {
-				// Armazena o veiculo encontrado
-				veiculosSelecionados[quantidade] = encontrado;
-				quantidade++;
-			} else {
-				System.out.println("Veiculo nao encontrado.");
-			}
-		}
+            String linha = sc.nextLine();
+            String[] partes = linha.split(" ");
 
-			// Ordena os veiculos selecionados pela marca
-			Veiculo.insertionSort(veiculosSelecionados, quantidade);
+            String comando = partes[0];
 
-			//Saida formatada
-			for (int i = 0; i < quantidade; i++) {
-				System.out.println(veiculosSelecionados[i].format());
-			}
+            if (comando.equals("II")) {
 
-			sc.close();
+                int id = Integer.parseInt(partes[1]);
 
-	        }
-	 }
+                for (Veiculo v : frota) {
+                    if (v.getId() == id) {
+                        lista.inserirInicio(v);
+                        break;
+                    }
+                }
+
+            } else if (comando.equals("I*")) {
+
+                int posicao = Integer.parseInt(partes[1]);
+                int id = Integer.parseInt(partes[2]);
+
+                for (Veiculo v : frota) {
+                    if (v.getId() == id) {
+                        lista.inserir(v, posicao);
+                        break;
+                    }
+                }
+
+            } else if (comando.equals("IF")) {
+
+                int id = Integer.parseInt(partes[1]);
+
+                for (Veiculo v : frota) {
+                    if (v.getId() == id) {
+                        lista.inserirFim(v);
+                        break;
+                    }
+                }
+
+            } else if (comando.equals("RI")) {
+
+                Veiculo removido = lista.removerInicio();
+
+                System.out.println("(R)" + removido.getMarca() + " " + removido.getModelo());
+
+            } else if (comando.equals("R*")) {
+
+                int posicao = Integer.parseInt(partes[1]);
+
+                Veiculo removido = lista.remover(posicao);
+
+                System.out.println("(R)" + removido.getMarca() + " " + removido.getModelo());
+
+            } else if (comando.equals("RF")) {
+
+                Veiculo removido = lista.removerFim();
+
+            System.out.println("(R)" + removido.getMarca() + " " + removido.getModelo());
+			
+            }
+        }
+
+        lista.mostrar();
+
+        sc.close();
+    }
+}
