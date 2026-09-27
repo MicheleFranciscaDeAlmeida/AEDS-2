@@ -223,7 +223,7 @@ class Veiculo {
 		Veiculo chave = veiculos[i];
 		int j = i - 1;
 
-		while (j >= 0 && veiculos[j].getMarca().compareTo(chave.getMarca()) > 0) {
+		while (j >= 0 && veiculos[j].getMarca().compareToIgnoreCase(chave.getMarca()) > 0) {
 			veiculos[j + 1] = veiculos[j];
 			j--;
 		}
@@ -233,9 +233,6 @@ class Veiculo {
 
      }
 }
-
-
-
 
 class LeitorCsv {
 	// Converte uma linha do CSV em um objeto Veiculo
@@ -377,3 +374,15 @@ public class Main {
 
 	        }
 	 }
+
+
+/*
+ * Uso de IA:
+ * A ferramenta de Inteligência Artificial foi utilizada como apoio
+ * para fundamentação, documentação e compreensão do enunciado,
+ * auxiliando na análise da lógica e na revisão do código.
+ *
+ * A implementação foi desenvolvida a partir do meu próprio
+ * raciocínio e entendimento do problema, com testes e validação
+ * realizados por mim.
+ */

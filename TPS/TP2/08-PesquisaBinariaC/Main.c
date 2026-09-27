@@ -1,7 +1,44 @@
-#include "Data.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdbool.h>
+#include <ctype.h>
+#include <strings.h>
+
+typedef struct {
+	int dia;
+	int mes;
+	int ano;
+} Data;
+
+// Constantes que definem os tamanhos maximos dos atributos do veiculo.
+#define MAX_MARCA 50
+#define MAX_MODELO 100
+#define MAX_CATEGORIA 50
+#define MAX_TRANSMISSAO 30
+#define MAX_TRACAO 30
+#define MAX_COMBUSTIVEIS 5
+#define MAX_TAM_COMBUSTIVEL 30
+
+// Estrutura que representa um veiculo.
+typedef struct {
+	int id;
+	char marca[MAX_MARCA];
+	char modelo[MAX_MODELO];
+	int ano;
+	char categoria[MAX_CATEGORIA];
+	char combustivel[MAX_COMBUSTIVEIS][MAX_TAM_COMBUSTIVEL];
+	int quantidadeCombustiveis;
+	int cilindros;
+	double cilindrada;
+	char transmissao[MAX_TRANSMISSAO];
+	char tracao[MAX_TRACAO];
+	double consumoCidade;
+	double consumoEstrada;
+	double co2;
+	bool turbo;
+	Data dataRegistro;
+} Veiculo;
 
 Data parseData(char* s) {
 	// Inicializa a data com zeros para o caso de a string ser invalida ou vazia.
@@ -20,23 +57,14 @@ Data parseData(char* s) {
 	}
 	
 	return d;
-      }
-     
-     
-     void formatData(Data d, char* buffer) {
-	     // Converte a data para o formato DD/MM/AAAA.
-	     sprintf(buffer, "%02d/%02d/%04d", d.dia, d.mes, d.ano);
-     }
+}
 
 
+void formatData(Data d, char* buffer) {
+	// Converte a data para o formato DD/MM/AAAA.
+	sprintf(buffer, "%02d/%02d/%04d", d.dia, d.mes, d.ano);
+}
 
-
-#include "Veiculo.h"
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <ctype.h>
-#include <strings.h>
 
 // Substitui virgulas por pontos para permitir a conversao de valores decimais.
 void replaceCommaDot(char* str) {
@@ -266,11 +294,6 @@ bool pesquisaBinaria(Veiculo* veiculos, int n, char* modeloBusca) {
     return false;
 }
 
-#include "LeitorCsvFunctions.h"
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-
 #define MAX_LINHA 500
 #define CAPACIDADE_INICIAL 1000
 
@@ -327,12 +350,6 @@ Veiculo* lerCsv(char* caminhoArquivo, int* n) {
     return veiculos;
 }
 
-
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <stdbool.h>
-#include "LeitorCsvFunctions.h"
 
 #define CAMINHO_DATASET "/tmp/veiculos.csv"
 
@@ -411,3 +428,15 @@ int main() {
 
     return 0;
 }
+
+
+/*
+ * Uso de IA:
+ * A ferramenta de Inteligência Artificial foi utilizada como apoio
+ * para fundamentação, documentação e compreensão do enunciado,
+ * auxiliando na análise da lógica e na revisão do código.
+ *
+ * A implementação foi desenvolvida a partir do meu próprio
+ * raciocínio e entendimento do problema, com testes e validação
+ * realizados por mim.
+ */

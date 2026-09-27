@@ -1,42 +1,65 @@
-#include "Data.h"
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-
-Data parseData(char* s) {
-	// Inicializa a data com zeros para o caso de a string ser invalida ou vazia.
-	Data d = {0, 0, 0};
-
-	if(s == NULL || strlen(s) == 0) {
-		return d;
-	}
-
-	// Faz a leitura da data no formato AAAA-MM-DD e separa ano, mes e dia.
-	int ano, mes, dia;
-	if (sscanf(s, "%d-%d-%d", &ano, &mes, &dia) == 3) {
-		d.dia = dia;
-		d.mes = mes;
-		d.ano = ano;
-	}
-	
-	return d;
-      }
-     
-     
-     void formatData(Data d, char* buffer) {
-	     // Converte a data para o formato DD/MM/AAAA.
-	     sprintf(buffer, "%02d/%02d/%04d", d.dia, d.mes, d.ano);
-     }
-
-
-
-
-#include "Veiculo.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
 #include <strings.h>
+#include <stdbool.h>
+
+typedef struct {
+    int dia;
+    int mes;
+    int ano;
+} Data;
+
+#define MAX_MARCA 50
+#define MAX_MODELO 100
+#define MAX_CATEGORIA 50
+#define MAX_TRANSMISSAO 30
+#define MAX_TRACAO 30
+#define MAX_COMBUSTIVEIS 5
+#define MAX_TAM_COMBUSTIVEL 30
+
+typedef struct {
+    int id;
+    char marca[MAX_MARCA];
+    char modelo[MAX_MODELO];
+    int ano;
+    char categoria[MAX_CATEGORIA];
+    char combustivel[MAX_COMBUSTIVEIS][MAX_TAM_COMBUSTIVEL];
+    int quantidadeCombustiveis;
+    int cilindros;
+    double cilindrada;
+    char transmissao[MAX_TRANSMISSAO];
+    char tracao[MAX_TRACAO];
+    double consumoCidade;
+    double consumoEstrada;
+    double co2;
+    bool turbo;
+    Data dataRegistro;
+} Veiculo;
+
+Data parseData(char* s) {
+    // Inicializa a data com zeros para o caso de a string ser invalida ou vazia.
+    Data d = {0, 0, 0};
+
+    if(s == NULL || strlen(s) == 0) {
+        return d;
+    }
+
+    // Faz a leitura da data no formato AAAA-MM-DD e separa ano, mes e dia.
+    int ano, mes, dia;
+    if (sscanf(s, "%d-%d-%d", &ano, &mes, &dia) == 3) {
+        d.dia = dia;
+        d.mes = mes;
+        d.ano = ano;
+    }
+    
+    return d;
+}
+
+void formatData(Data d, char* buffer) {
+    sprintf(buffer, "%02d/%02d/%04d", d.dia, d.mes, d.ano);
+}
 
 // Substitui virgulas por pontos para permitir a conversao de valores decimais.
 void replaceCommaDot(char* str) {
@@ -49,7 +72,6 @@ void replaceCommaDot(char* str) {
 Veiculo* parseVeiculo(char* s) {
     if (s == NULL || strlen(s) == 0) return NULL;
     
-    // Reserva memoria para copia da string e copia a linha recebida.
     char* linha = (char*)malloc(strlen(s) + 1);
 
     if (!linha) {
@@ -58,7 +80,6 @@ Veiculo* parseVeiculo(char* s) {
 
     strcpy(linha, s);
 
-    // Reserva memoria para armazenar o veiculo.
     Veiculo* v = (Veiculo*)malloc(sizeof(Veiculo));
 
     if (!v) {
@@ -66,16 +87,12 @@ Veiculo* parseVeiculo(char* s) {
         return NULL;
     }
     
-    // Inicializa os campos do veiculo com zero.
     memset(v, 0, sizeof(Veiculo));
     
-    // Separa a linha do CSV em campos usando a virgula como delimitador.
     char* token = strtok(linha, ",");
     int campo = 0;
     
-    // Percorre os campos da linha e armazena cada um no atributo correspondente.
     while (token != NULL && campo < 15) {
-        // Remove espacos no inicio e no final do campo.
         char* start = token;
 
         while (*start == ' ') start++;
@@ -87,70 +104,54 @@ Veiculo* parseVeiculo(char* s) {
             end--;
         }
         
-        // Converte cada campo do CSV para o tipo e atributo correspondente.
         switch(campo) {
             case 0:
                 v->id = atoi(start);
                 break;
-
             case 1:
                 strncpy(v->marca, start, MAX_MARCA - 1);
                 break;
-
             case 2:
                 strncpy(v->modelo, start, MAX_MODELO - 1);
                 break;
-
             case 3:
                 v->ano = atoi(start);
                 break;
-
             case 4:
                 strncpy(v->categoria, start, MAX_CATEGORIA - 1);
                 break;
-
-            // Armazena o combustivel no primeiro elemento do vetor de combustiveis.
             case 5:
                 v->quantidadeCombustiveis = 1;
                 strncpy(v->combustivel[0], start, MAX_TAM_COMBUSTIVEL - 1);
                 break;
-
             case 6:
                 v->cilindros = atoi(start);
                 break;
-
             case 7:
                 replaceCommaDot(start);
                 v->cilindrada = atof(start);
                 break;
-
             case 8:
                 strncpy(v->transmissao, start, MAX_TRANSMISSAO - 1);
                 break;
-
             case 9:
                 strncpy(v->tracao, start, MAX_TRACAO - 1);
                 break;
-
             case 10:
                 replaceCommaDot(start);
                 v->consumoCidade = atof(start);
                 break;
-
             case 11:
                 replaceCommaDot(start);
                 v->consumoEstrada = atof(start);
                 break;
-
             case 12:
                 replaceCommaDot(start);
                 v->co2 = atof(start);
                 break;
-
             case 13:
                 v->turbo = (strcmp(start, "true") == 0);
                 break;
-
             case 14:
                 v->dataRegistro = parseData(start);
                 break;
@@ -164,9 +165,7 @@ Veiculo* parseVeiculo(char* s) {
     return v;
 }
 
-// Formata os dados do veiculo em uma unica string.
 void formatVeiculo(Veiculo v, char* buffer) {
-    // Monta a representacao dos combustiveis em uma unica string.
     char combStr[200] = "";
 
     for (int i = 0; i < v.quantidadeCombustiveis; i++) {
@@ -177,18 +176,15 @@ void formatVeiculo(Veiculo v, char* buffer) {
         }
     }
 
-    // Substitui ponto e virgula por virgula nos combustiveis.
     for (int i = 0; combStr[i] != '\0'; i++) {
         if (combStr[i] == ';') {
             combStr[i] = ',';
         }
     }
     
-    // Converte a data para o formato de saida.
     char dataStr[15];
     formatData(v.dataRegistro, dataStr);
 
-    // Formata todos os atributos do veiculo conforme o padrao de saida.
     sprintf(buffer,
         "[%d ## %s ## %s ## %d ## %s ## [%s] ## %d ## %.1f ## %s ## %s ## %.2f ## %.2f ## %.1f ## %s ## %s]",
         v.id,
@@ -252,11 +248,6 @@ void countingSort(Veiculo* veiculos, int n) {
     free(ordenados);
 }
 
-#include "LeitorCsvFunctions.h"
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-
 #define MAX_LINHA 500
 #define CAPACIDADE_INICIAL 1000
 
@@ -283,7 +274,6 @@ Veiculo* lerCsv(char* caminhoArquivo, int* n) {
         if (primeiraLinha) { primeiraLinha = false; continue; }
         if (strlen(linha) == 0) continue;
 
-        // Aumenta a capacidade do vetor quando todos os espaços disponiveis foram ocupados.
         if (count >= capacidade) {
             capacidade *= 2;
             Veiculo* temp = (Veiculo*)realloc(veiculos, capacidade * sizeof(Veiculo));
@@ -291,12 +281,9 @@ Veiculo* lerCsv(char* caminhoArquivo, int* n) {
             veiculos = temp;
         }
 
-        // Converte a linha do CSV em um Veiculo.
         Veiculo* vPtr = parseVeiculo(linha);
         if (vPtr != NULL) {
             veiculos[count] = *vPtr;
-	    
-	    // Libera o malloc interno do parseVeiculo
             free(vPtr);
             count++;
         }
@@ -313,23 +300,14 @@ Veiculo* lerCsv(char* caminhoArquivo, int* n) {
     return veiculos;
 }
 
-
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <stdbool.h>
-#include "LeitorCsvFunctions.h"
-
 #define CAMINHO_DATASET "/tmp/veiculos.csv"
 #define BUFFER_SAIDA 500
 
 int main() {
     int n = 0;
 
-    // Carrega os veiculos do arquivo CSV.
     Veiculo* frota = lerCsv(CAMINHO_DATASET, &n);
 
-    // Verifica se algum veiculo foi carregado.
     if (!frota || n == 0) {
         printf("Nenhum veiculo carregado.\n");
         return 1;
@@ -339,47 +317,50 @@ int main() {
     int quantidade = 0;
 
     int idBusca;
-    
 
-    // Faz a leitura dos IDs dos veiculos até que seja informado -1.
     while (scanf("%d", &idBusca) == 1) {
         if (idBusca == -1) break;
 
         bool encontrado = false;
 
-        // Percorre a frota procurando o veiculo pelo ID.	
         for (int i = 0; i < n; i++) {
             if (frota[i].id == idBusca) {
-
-              // Guarda o veiculo selecionado.
-	      selecionados[quantidade] = frota[i];
-	      quantidade++;
-
-	      encontrado = true;
-	      break;
-              }
-           } 
+                selecionados[quantidade] = frota[i];
+                quantidade++;
+                encontrado = true;
+                break;
+            }
+        }
 
         if (!encontrado) {
             printf("Veiculo nao encontrado.\n");
-             }
-           }
+        }
+    }
        
-       // Ordena os veiculos selecionados por quantidade de cilindros.
-       countingSort(selecionados, quantidade);
+    // Ordena os veiculos selecionados por quantidade de cilindros.
+    countingSort(selecionados, quantidade);
 
-       // Imprime os veiculos ja ordenados.
-       char buffer[BUFFER_SAIDA];
+    char buffer[BUFFER_SAIDA];
 
-       for (int i = 0; i < quantidade; i++) {
-	       formatVeiculo(selecionados[i], buffer);
-	       printf("%s\n", buffer);
-       }
-    	
-
-    // Libera a memoria.
+    for (int i = 0; i < quantidade; i++) {
+        formatVeiculo(selecionados[i], buffer);
+        printf("%s\n", buffer);
+    }
+    
     free(selecionados);
     free(frota);
 
     return 0;
 }
+
+
+/*
+ * Uso de IA:
+ * A ferramenta de Inteligência Artificial foi utilizada como apoio
+ * para fundamentação, documentação e compreensão do enunciado,
+ * auxiliando na análise da lógica e na revisão do código.
+ *
+ * A implementação foi desenvolvida a partir do meu próprio
+ * raciocínio e entendimento do problema, com testes e validação
+ * realizados por mim.
+ */
