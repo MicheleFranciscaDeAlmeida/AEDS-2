@@ -246,7 +246,7 @@ void selectionSort(Veiculo* veiculos, int n) {
 
         for (int j = i + 1; j < n; j++) {
 
-            if (strcasecmp(veiculos[j].modelo, veiculos[menor].modelo) < 0) {
+           if (strcasecmp(veiculos[j].modelo, veiculos[menor].modelo) < 0) {
 
                 menor = j;
             }
