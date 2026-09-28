@@ -327,7 +327,7 @@ class Lista {
     }
 
     public void inserir(Veiculo veiculo, int posicao) {
-        if (n >= array.length || posicao < 0 || posicao >= n) {
+        if (n >= array.length || posicao < 0 || posicao > n) {
             return;
         }
 
