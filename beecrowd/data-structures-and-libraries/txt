@@ -1,0 +1,78 @@
+/* q1 localizacao dos predios
+em comemoracao aos 40 anos do curso, diversos egressos retornarão a universidade . Como os predios 
+do campus possuem numeros de identificacao que nao seguem uma ordem relacionada aos seus nomes, sera
+criada uma relacao p/ facilitar sua localizacao.
+a relacao deve ser organizada em ordem alfabetica pelo nome do predio. Em seguida, os egressos poderao
+consultar o numero de determinados predios. 
+entrada
+a entrada contem diversos casos de teste e termina com o fim do arquivo EOF.
+cada caso comeca com um inteiro N (1 <= N <= 1000), seguido de N linhas no formato: 
+numero nome. 
+o numero é um inteiro positivo. o nome é uma string de até 30 caracteres, contem apenas letras, nao possui
+espacos e nao se repete.
+em seguida um inteiro P (1 <= P <= N),indica a quantidade de consultas, seguido de P nomes de predios. Todo 
+predio consultado estara cadastrado.
+saida
+para cada caso imprima primeiro todos os predios em ordem alfabetica pelo nome, no formato nome numero. 
+em seguida imprima P consultas, na ordem em que foram realizadas, utilizando o mesmo formato, nao imprimir linhas em branco
+ou separadores.
+ex
+entrada
+5
+34 Biblioteca
+7 Laboratorios
+21 Teatro
+3 Reitoria
+18 ComplexoEsportivo
+3
+Teatro
+Biblioteca
+Reitoria
+
+saida 
+Biblioteca 34
+ComplexoEsportivo 18
+Laboratorios 7
+Reitoria 3
+Teatro 21
+Teatro 21
+Biblioteca 34
+Reitoria 3
+*/     
+
+/*em comemoracao aos 40 anos de curso, a universidade disponibilizara onibus pra transportar os egressos
+até o local do evento.
+os egressos aguardam na ordem em que chegaram, quando um onibus chega, embarcam os primeiros da fila, ate o limite de lugares disponiveis, 
+se houver mais lugares que pessoas aguardando, todos embarcam.
+entrada
+a entrada contem diversos casos de teste e termina com o fim do arquivo EOF.
+cada caso comeca com um inteiro N (1 <= N <= 10 elevado a 4), seguido de N operacoes:
+CHEGA nome ONIBUS C
+CHEGA adiciona o egresso ao final da fila. O nome possui no maximo 30 caracteres, contem apenas letras e nao contem espacos.
+ONIBUS C indica a chegada de um onibus com C lugares disponiveis (C > 0). Embarcam ate C egressos respeitando a ordem de chegada.
+cada caso comeca sem egressos aguardando.
+
+saida 
+
+apos cada operacao ONIBUS, imprima em uma unica linha os nomes dos egressos que permaneceram aguardando,
+respeitando a ordem em que estao na fila e separados por um unico espaco.
+Caso nao reste nenhum egresso aguardando apos o embarque, imprima: VAZIA.
+
+entrada 
+10
+CHEGA Ana
+CHEGA Bruno
+CHEGA Carlos
+CHEGA Daniela
+ONIBUS 2
+CHEGA Eduardo
+CHEGA Fernanda
+ONIBUS 3
+CHEGA Gabriel
+ONIBUS 4
+
+SAIDA
+Carlos Daniela
+Fernanda
+VAZIA
+*/
