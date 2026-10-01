@@ -83,7 +83,7 @@ public class Main {
                 System.out.println("(R)" + removido.getMarca() + " " + removido.getModelo());
             }
         }
-
+		
         lista.mostrar();
 
         sc.close();
