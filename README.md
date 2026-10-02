@@ -44,7 +44,7 @@ Ao longo da disciplina, são trabalhados conceitos fundamentais para a construç
 ### 💻 Linguagens e ferramentas
 
 <p align="center">
-  <img src="https://skillicons.dev/icons?i=c,java,linux,vim,git,github,vscode" alt="C, Java, Linux, Vim, Git, GitHub e VS Code">
+  <img src="https://skillicons.dev/icons?i=c,java,linux,vim,git,github" alt="C, Java, Linux, Vim, Git, GitHub">
 </p>
 
 ### 📂 Organização
