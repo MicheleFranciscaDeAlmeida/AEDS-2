@@ -217,21 +217,91 @@ class Veiculo {
 		return String.format(Locale.US,"[%d ## %s ## %s ## %d ## %s ## [%s] ## %d ## %.1f ## %s ## %s ## %.2f ## %.2f ## %.1f ## %b ## %s]", id, marca, modelo, ano, categoria, combStr, cilindros, cilindrada, transmissao, tracao, consumoCidade, consumoEstrada, co2, turbo, (dataRegistro != null ? dataRegistro.format() : "N/A" )); 
 	}
 
-	// Implementacao de InsertionSort
-	public static void insertionSort(Veiculo[] veiculos, int n) {
-	for (int i = 1; i < n; i++) {
-		Veiculo chave = veiculos[i];
-		int j = i - 1;
-
-		while (j >= 0 && veiculos[j].getMarca().compareToIgnoreCase(chave.getMarca()) > 0) {
-			veiculos[j + 1] = veiculos[j];
-			j--;
+	// Implementacao de HeapSort
+	public static void heapSort(Veiculo[] veiculos, int n) {
+		// Construcao do heap
+		for (int tam = 2; tam <= n; tam++) {
+			construir(veiculos, tam);
 		}
 
-		veiculos[j + 1] = chave;
-	}
+		// Ordenacao do heap
+		int tam = n;
 
-     }
+		while (tam > 1) {
+			swap(veiculos, 0, tam - 1);
+			tam--;
+			reconstruir(veiculos, tam);
+		}
+	}
+		// Insere o elemento no heap, subindo enquanto for maior que o pai
+		private static void construir(Veiculo[] veiculos, int tam) {
+			int i = tam - 1;
+
+			while (i > 0) {
+				int pai = (i - 1) / 2;
+
+				if (maior(veiculos[i], veiculos[pai])) {
+					swap(veiculos, i, pai);
+					i = pai;
+				} else {
+					break;
+				}
+			}
+		}
+
+		// Reorganiza o heap depois da troca da raiz
+		private static void reconstruir(Veiculo[] veiculos, int tam) {
+    int i = 0;
+
+    while (hasFilho(i, tam)) {
+        int filho = getMaiorFilho(veiculos, i, tam);
+
+        if (maior(veiculos[filho], veiculos[i])) {
+            swap(veiculos, i, filho);
+            i = filho;
+        } else {
+            break;
+        }
+    }
+}
+
+		// verifica se o elemento possui pelo menos um filho 
+		private static boolean hasFilho(int i, int tam) {
+			return 2 * i + 1 < tam;
+		}
+
+		// Retorna o maior dos dois filhos
+		private static int getMaiorFilho(Veiculo[] veiculos, int i, int tam) {
+    	int esquerdo = 2 * i + 1;
+    	int direito = 2 * i + 2;
+
+    	if (direito >= tam || maior(veiculos[esquerdo], veiculos[direito])) {
+        return esquerdo;
+    	} else {
+        return direito;
+    }
+}
+
+// Compara os veiculos para formar o heap maximo
+private static boolean maior(Veiculo a, Veiculo b) {
+    if (a.getCo2() > b.getCo2()) {
+        return true;
+    }
+
+    if (a.getCo2() < b.getCo2()) {
+        return false;
+    }
+
+    return a.getTransmissao().compareToIgnoreCase(b.getTransmissao()) > 0;
+}
+
+// Troca dos dois veiculos de posicao
+private static void swap(Veiculo[] veiculos, int i, int j) {
+    Veiculo temp = veiculos[i];
+    veiculos[i] = veiculos[j];
+    veiculos[j] = temp;
+}
+
 }
 
 class LeitorCsv {
@@ -362,8 +432,8 @@ public class Main {
 			}
 		}
 
-			// Ordena os veiculos selecionados pela marca
-			Veiculo.insertionSort(veiculosSelecionados, quantidade);
+			// Ordena os veiculos selecionados por co2 e transmissao
+			Veiculo.heapSort(veiculosSelecionados, quantidade);
 
 			//Saida formatada
 			for (int i = 0; i < quantidade; i++) {
