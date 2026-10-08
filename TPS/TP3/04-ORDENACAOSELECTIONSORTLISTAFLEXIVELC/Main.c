@@ -72,6 +72,80 @@ typedef struct {
     Data dataRegistro;
 } Veiculo;
 
+// Lista simplesmente encadeada 
+
+typedef struct Celula {
+    Veiculo elemento;
+    struct Celula* prox;
+} Celula;
+
+typedef struct {
+    Celula* primeiro;
+    Celula* ultimo;
+    int tamanho;
+} Lista;
+
+// Inicializa a lista.
+void iniciarLista(Lista* lista) {
+    lista->primeiro = NULL;
+    lista->ultimo = NULL;
+    lista->tamanho = 0;
+}
+
+// Insere o fim da lista.
+void inserirFim(Lista* lista, Veiculo veiculo) {
+    Celula* nova = (Celula*)malloc(sizeof(Celula));
+
+    nova-> elemento = veiculo;
+    nova-> prox = NULL;
+
+    if (lista->primeiro == NULL) {
+        lista->primeiro = nova;
+    } else {
+        lista->ultimo->prox = nova;
+    }
+
+    lista->ultimo = nova;
+    lista->tamanho++;
+}
+
+// Libera a memória alocada para a lista.
+void liberarLista(Lista* lista) {
+    Celula* atual = lista->primeiro;
+
+    while (atual != NULL) {
+        Celula* proxima = atual->prox;
+        free(atual);
+        atual = proxima;
+    }
+
+    lista->primeiro = NULL;
+    lista->ultimo = NULL;
+    lista->tamanho = 0;
+}
+
+// Inserir Selection Sort na lista encadeada.
+void selectionSortLista(Lista* lista) {
+    Celula* i;
+    Celula* j;
+    Celula* menor;
+
+    for (i = lista->primeiro; i != NULL; i = i->prox) {
+        menor = i;
+
+        for (j = i->prox; j != NULL; j = j->prox) {
+            if (strcasecmp(j->elemento.modelo,menor->elemento.modelo) < 0) {
+                menor = j;
+            }
+        }
+
+    if (menor != i) {
+        Veiculo temp = i->elemento;
+        i->elemento = menor->elemento;
+        menor->elemento = temp;
+    }
+  }
+}
 
 // Substitui virgulas por pontos para permitir a conversao de valores decimais.
 void replaceCommaDot(char* str) {
@@ -429,10 +503,8 @@ int main() {
         return 1;
     }
 
-    Veiculo* veiculosSelecionados =
-        (Veiculo*)malloc(n * sizeof(Veiculo));
-
-    int quantidade = 0;
+    Lista lista;
+    iniciarLista(&lista);
 
     int idBusca;
 
@@ -450,37 +522,32 @@ int main() {
 
             if (frota[i].id == idBusca) {
 
-                veiculosSelecionados[quantidade] = frota[i];
+            inserirFim(&lista, frota[i]);
 
-                quantidade++;
+            encontrado = true;
 
-                encontrado = true;
-
-                break;
-            }
+            break;
         }
+    }
 
         if (!encontrado) {
             printf("Veiculo nao encontrado.\n");
         }
     }
 
-    selectionSort(
-        veiculosSelecionados,
-        quantidade
-    );
+    selectionSortLista(&lista);
 
-    for (int i = 0; i < quantidade; i++) {
+    Celula* atual = lista.primeiro;
 
-        formatVeiculo(
-            veiculosSelecionados[i],
-            buffer
-        );
+    while (atual != NULL) {
+        formatVeiculo(atual->elemento, buffer);
 
         printf("%s\n", buffer);
+
+        atual = atual->prox;
     }
 
-    free(veiculosSelecionados);
+    liberarLista(&lista);
 
     free(frota);
 
