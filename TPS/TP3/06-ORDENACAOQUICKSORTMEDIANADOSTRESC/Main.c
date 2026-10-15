@@ -266,35 +266,95 @@ void formatVeiculo(Veiculo v, char* buffer) {
     );
 }
 
+// Compara dois veiculos pelo consumo estrada e em caso de empate, pela marca.
+int compararVeiculos(Veiculo a, Veiculo b) {
 
-// SELECTION SORT
+    if (a.consumoEstrada < b.consumoEstrada) {
+        return -1;
+    }
 
-// Ordena os veiculos em ordem crescente pelo atributo modelo.
-void selectionSort(Veiculo* veiculos, int n) {
+    if (a.consumoEstrada > b.consumoEstrada) {
+        return 1;
+    }
 
-    for (int i = 0; i < n - 1; i++) {
+    return strcasecmp(a.marca, b.marca);
+}
 
-        int menor = i;
+// Escolhe a mediana entre o primeiro, o meio e o ultimo elemento.
+Veiculo medianaTres(Veiculo primeiro, Veiculo meio, Veiculo ultimo) {
 
-        for (int j = i + 1; j < n; j++) {
+    if (compararVeiculos(primeiro, meio) < 0) {
 
-            if (strcasecmp(
-                    veiculos[j].modelo,
-                    veiculos[menor].modelo
-                ) < 0) {
-
-                menor = j;
-            }
+        if (compararVeiculos(meio, ultimo) < 0) {
+            return meio;
         }
 
-        if (menor != i) {
+        if (compararVeiculos(primeiro, ultimo) < 0) {
+            return ultimo;
+        }
+
+        return primeiro;
+    } else {
+        if (compararVeiculos(primeiro, ultimo) < 0) {
+            return primeiro;
+        }
+
+        if (compararVeiculos(meio, ultimo) < 0) {
+            return ultimo;
+        }
+
+        return meio;
+    }
+}
+
+// QUICKSORT
+
+// Ordena pelo consumo estrada.
+// Em caso de empate, ordena pela marca.
+void quicksort(Veiculo* veiculos, int esq, int dir) {
+
+    int i = esq;
+    int j = dir;
+
+    int meio = esq + (dir - esq) / 2;
+
+    Veiculo pivo = medianaTres( veiculos[esq], veiculos[meio], veiculos[dir]);
+
+    while (i <= j) {
+
+        while (
+            veiculos[i].consumoEstrada < pivo.consumoEstrada ||
+            (veiculos[i].consumoEstrada == pivo.consumoEstrada &&
+             strcasecmp(veiculos[i].marca, pivo.marca) < 0)
+        ) {
+            i++;
+        }
+
+        while (
+            veiculos[j].consumoEstrada > pivo.consumoEstrada ||
+            (veiculos[j].consumoEstrada == pivo.consumoEstrada &&
+             strcasecmp(veiculos[j].marca, pivo.marca) > 0)
+        ) {
+            j--;
+        }
+
+        if (i <= j) {
 
             Veiculo temp = veiculos[i];
+            veiculos[i] = veiculos[j];
+            veiculos[j] = temp;
 
-            veiculos[i] = veiculos[menor];
-
-            veiculos[menor] = temp;
+            i++;
+            j--;
         }
+    }
+
+    if (esq < j) {
+        quicksort(veiculos, esq, j);
+    }
+
+    if (i < dir) {
+        quicksort(veiculos, i, dir);
     }
 }
 
@@ -465,10 +525,13 @@ int main() {
         }
     }
 
-    selectionSort(
-        veiculosSelecionados,
-        quantidade
-    );
+        if (quantidade > 0) {
+        quicksort(
+            veiculosSelecionados,
+            0,
+            quantidade - 1
+        );
+    }
 
     for (int i = 0; i < quantidade; i++) {
 

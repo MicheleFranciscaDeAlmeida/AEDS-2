@@ -251,7 +251,7 @@ public static void merge(Veiculo[] veiculos, int esq, int meio, int dir) {
             // Empate no consumo da cidade:
             // desempate pela categoria
             if (veiculos[i].getCategoria()
-                    .compareToIgnoreCase(veiculos[j].getCategoria()) < 0) {
+                    .compareToIgnoreCase(veiculos[j].getCategoria()) <= 0) {
 
                 aux[k] = veiculos[i];
                 i++;
@@ -390,7 +390,7 @@ public class Main {
 		//Leitura dos IDs da entrada padrao
 		Scanner sc = new Scanner(System.in);
 
-		while(sc.hasNextLine()) {
+		while(sc.hasNextInt()) {
 			int idBusca = sc.nextInt();
 
 			if (idBusca == -1) {
