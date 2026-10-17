@@ -272,6 +272,7 @@ int compararStrings(const char* a, const char* b) {
         char c1 = *a;
         char c2 = *b;
 
+        // Converte a letra maiuscula para minuscula, considerando a tabela ASCII.
         if (c1 >= 'A' && c1 <= 'Z') {
             c1 = c1 + ('a' - 'A');
         }
@@ -288,10 +289,12 @@ int compararStrings(const char* a, const char* b) {
             return 1;
         }
 
+        // Avanca nas duas strings enquanto os caracteres forem iguais.
         a++;
         b++;
     }
 
+    // Trata o caso em que uma das strings termina antes da outra.
     if (*a == '\0' && *b == '\0') {
         return 0;
     }
@@ -301,41 +304,51 @@ int compararStrings(const char* a, const char* b) {
 
 // Compara dois veiculos pelo consumo estrada e em caso de empate, pela marca.
 int compararVeiculos(Veiculo a, Veiculo b) {
+    if (a.consumoEstrada < b.consumoEstrada) return -1;
+    if (a.consumoEstrada > b.consumoEstrada) return 1;
 
-    if (a.consumoEstrada < b.consumoEstrada) {
-        return -1;
-    }
+    int comparacaoMarca = compararStrings(a.marca, b.marca);
 
-    if (a.consumoEstrada > b.consumoEstrada) {
-        return 1;
-    }
+    if (comparacaoMarca != 0) return comparacaoMarca;
 
-    return compararStrings(a.marca, b.marca);
+    if (a.id < b.id) return -1;
+    if (a.id > b.id) return 1;
+
+    return 0;
 }
 
 // Escolhe a mediana entre o primeiro, o meio e o ultimo elemento.
 Veiculo medianaTres(Veiculo primeiro, Veiculo meio, Veiculo ultimo) {
 
+    // Verifica a ordem entre o primeiro e o elemento central.
     if (compararVeiculos(primeiro, meio) < 0) {
 
+        // Se o elemento central tambem for menor que o ultimo,
+        // ele sera a mediana dos tres.
         if (compararVeiculos(meio, ultimo) < 0) {
             return meio;
         }
 
+        // Verifica se o ultimo elemento esta entre o primeiro e o central.
         if (compararVeiculos(primeiro, ultimo) < 0) {
             return ultimo;
         }
 
         return primeiro;
     } else {
+
+        // Verifica se o primeiro elemento e menor que o ultimo.
         if (compararVeiculos(primeiro, ultimo) < 0) {
             return primeiro;
         }
 
+        // Verifica se o elemento central e menor que o ultimo.
         if (compararVeiculos(meio, ultimo) < 0) {
             return ultimo;
         }
 
+        // Se nenhuma das condicoes anteriores for atendida,
+        // o elemento central sera a mediana.
         return meio;
     }
 }
@@ -347,22 +360,33 @@ Veiculo medianaTres(Veiculo primeiro, Veiculo meio, Veiculo ultimo) {
 
 void quicksort(Veiculo* veiculos, int esq, int dir) {
 
+    // Inicializa os indices da busca nas extremidades do trecho.
     int i = esq;
     int j = dir;
 
+    // Calcula o indice do elemento central do trecho.
     int meio = esq + (dir - esq) / 2;
 
-    Veiculo pivo = medianaTres(veiculos[esq],veiculos[meio], veiculos[dir]);
+    // Escolhe a mediana entre o primeiro, o central e o ultimo elemento como pivo.
+    Veiculo pivo = medianaTres(
+    veiculos[esq],
+    veiculos[meio],
+    veiculos[dir]
+);
 
     while(i <= j) {
+
+        // Avanca da esquerda para a direita enquanto os elementos forem menores que o pivo.
         while (i <= dir && compararVeiculos(veiculos[i], pivo) < 0) {
             i++;
         }
 
+        // Avanca da direita para a esquerda enquanto os elementos forem maiores que o pivo.
         while (j >= esq && compararVeiculos(veiculos[j], pivo) > 0) {
             j--;
         }
 
+        // Troca os elementos quando os indices ainda nao se cruzaram.
         if (i <= j) {
             Veiculo temp = veiculos[i];
             veiculos[i] = veiculos[j];
@@ -373,19 +397,22 @@ void quicksort(Veiculo* veiculos, int esq, int dir) {
         }
     }
 
+    // Ordena recursivamente a parte esquerda do trecho.
     if (esq < j) {
         quicksort(veiculos, esq, j);
     }
 
+        // Ordena recursivamente a parte direita do trecho.
     if (i < dir) {
         quicksort(veiculos, i, dir);
-        }
     }
+}
 
 // LEITURA CSV 
 
 Veiculo* lerCsv(char* caminhoArquivo, int* n) {
 
+    // Abre o arquivo CSV para leitura.
     FILE* arquivo = fopen(caminhoArquivo, "r");
 
     if (!arquivo) {
@@ -429,6 +456,7 @@ Veiculo* lerCsv(char* caminhoArquivo, int* n) {
             linha[len - 1] = '\0';
         }
 
+        // Ignora a primeira linha, que contem os nomes das colunas.
         if (primeiraLinha) {
 
             primeiraLinha = false;
@@ -440,6 +468,7 @@ Veiculo* lerCsv(char* caminhoArquivo, int* n) {
             continue;
         }
 
+        // Duplica a capacidade quando todos os espacos disponiveis foram utilizados.
         if (count >= capacidade) {
 
             capacidade *= 2;
@@ -466,6 +495,7 @@ Veiculo* lerCsv(char* caminhoArquivo, int* n) {
 
         Veiculo* vPtr = parseVeiculo(linha);
 
+        // Copia os dados do veiculo para o array e libera a memoria temporaria.
         if (vPtr != NULL) {
 
             veiculos[count] = *vPtr;
@@ -503,6 +533,7 @@ int main() {
 
     int n = 0;
 
+    // Carrega os veiculos do arquivo CSV.
     Veiculo* frota = lerCsv(CAMINHO_DATASET, &n);
 
     if (!frota || n == 0) {
@@ -521,6 +552,7 @@ int main() {
 
     char buffer[BUFFER_SAIDA];
 
+    // Faz a leitura dos IDs dos veiculos ate receber -1 ou terminar a entrada.
     while (scanf("%d", &idBusca) == 1) {
 
         if (idBusca == -1) {
@@ -529,6 +561,7 @@ int main() {
 
         bool encontrado = false;
 
+        // Procura o veiculo correspondente ao ID informado.
         for (int i = 0; i < n; i++) {
 
             if (frota[i].id == idBusca) {
@@ -548,14 +581,16 @@ int main() {
         }
     }
 
-        if (quantidade > 0) {
-        quicksort(
-            veiculosSelecionados,
-            0,
-            quantidade - 1
+          // Ordena os veiculos selecionados quando houver pelo menos um elemento.
+          if (quantidade > 0) {
+              quicksort(
+              veiculosSelecionados,
+              0,
+              quantidade - 1
         );
     }
 
+    // Formata e imprime os veiculos na ordem definida pelo QuickSort.
     for (int i = 0; i < quantidade; i++) {
 
         formatVeiculo(
