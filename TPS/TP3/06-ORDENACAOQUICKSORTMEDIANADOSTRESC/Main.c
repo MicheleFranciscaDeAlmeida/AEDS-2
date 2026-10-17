@@ -266,6 +266,39 @@ void formatVeiculo(Veiculo v, char* buffer) {
     );
 }
 
+// Compara duas strings sem diferenciar maiusculas e minusculas.
+int compararStrings(const char* a, const char* b) {
+    while (*a != '\0' && *b != '\0') {
+        char c1 = *a;
+        char c2 = *b;
+
+        if (c1 >= 'A' && c1 <= 'Z') {
+            c1 = c1 + ('a' - 'A');
+        }
+
+        if (c2 >= 'A' && c2 <= 'Z') {
+            c2 = c2 + ('a' - 'A');
+        }
+
+        if (c1 < c2) {
+            return -1;
+        }
+
+        if (c1 > c2) {
+            return 1;
+        }
+
+        a++;
+        b++;
+    }
+
+    if (*a == '\0' && *b == '\0') {
+        return 0;
+    }
+
+    return (*a == '\0') ? -1 : 1;
+}
+
 // Compara dois veiculos pelo consumo estrada e em caso de empate, pela marca.
 int compararVeiculos(Veiculo a, Veiculo b) {
 
@@ -277,7 +310,7 @@ int compararVeiculos(Veiculo a, Veiculo b) {
         return 1;
     }
 
-    return strcasecmp(a.marca, b.marca);
+    return compararStrings(a.marca, b.marca);
 }
 
 // Escolhe a mediana entre o primeiro, o meio e o ultimo elemento.
@@ -311,6 +344,7 @@ Veiculo medianaTres(Veiculo primeiro, Veiculo meio, Veiculo ultimo) {
 
 // Ordena pelo consumo estrada.
 // Em caso de empate, ordena pela marca.
+
 void quicksort(Veiculo* veiculos, int esq, int dir) {
 
     int i = esq;
@@ -318,28 +352,18 @@ void quicksort(Veiculo* veiculos, int esq, int dir) {
 
     int meio = esq + (dir - esq) / 2;
 
-    Veiculo pivo = medianaTres( veiculos[esq], veiculos[meio], veiculos[dir]);
+    Veiculo pivo = medianaTres(veiculos[esq],veiculos[meio], veiculos[dir]);
 
-    while (i <= j) {
-
-        while (
-            veiculos[i].consumoEstrada < pivo.consumoEstrada ||
-            (veiculos[i].consumoEstrada == pivo.consumoEstrada &&
-             strcasecmp(veiculos[i].marca, pivo.marca) < 0)
-        ) {
+    while(i <= j) {
+        while (i <= dir && compararVeiculos(veiculos[i], pivo) < 0) {
             i++;
         }
 
-        while (
-            veiculos[j].consumoEstrada > pivo.consumoEstrada ||
-            (veiculos[j].consumoEstrada == pivo.consumoEstrada &&
-             strcasecmp(veiculos[j].marca, pivo.marca) > 0)
-        ) {
+        while (j >= esq && compararVeiculos(veiculos[j], pivo) > 0) {
             j--;
         }
 
         if (i <= j) {
-
             Veiculo temp = veiculos[i];
             veiculos[i] = veiculos[j];
             veiculos[j] = temp;
@@ -355,9 +379,8 @@ void quicksort(Veiculo* veiculos, int esq, int dir) {
 
     if (i < dir) {
         quicksort(veiculos, i, dir);
+        }
     }
-}
-
 
 // LEITURA CSV 
 
