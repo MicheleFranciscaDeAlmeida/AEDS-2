@@ -1,0 +1,18 @@
+Questão 17: Verdadeiro ou Falso
+
+
+    (a) Falsa. Insertion Sort é Θ(n). Θ(n) para dados quase ordenados. 
+    Merge Sort é sempre Θ(nlog⁡n)\Theta(n \log n)\Θ(nlogn).
+    (b) Verdadeira. Heapsort é in-place (Θ(1)\Theta(1)
+    Θ(1) extra) e garante Θ(nlog⁡n)\Theta(n \log n)
+    Θ(nlogn) no pior caso. Merge Sort precisa de Θ(n)\Theta(n)
+    Θ(n) extra.
+    (c) Falsa. Quicksort tem pior caso Θ(n2)\Theta(n^2)\Θ(n2) quando o pivô é 
+    mal escolhido (ex: vetor já ordenado e pivô é o primeiro elemento).
+    (d) Falsa. Pré-ordem: Raiz, Esq, Dir. Pós-ordem: Esq, Dir, Raiz. 
+    A sequência dada não corresponde à conversão direta sem conhecer a 
+    estrutura exata, mas a afirmação geral de que são iguais é falsa.
+    (e) Falsa. Heap Max exige Pai >= Filhos. BST exige Esq < Pai < Dir. 
+    Um heap [10, 5, 3] não é uma BST válida porque 3 (direita) < 10 (raiz), 
+    violando a propriedade BST.
+

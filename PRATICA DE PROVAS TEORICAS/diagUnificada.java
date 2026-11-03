@@ -1,4 +1,4 @@
-// Questão 8 - Criar uma lista duplamente encadeada com os elementos da diagonal
+diagUnificada - Criar uma lista duplamente encadeada com os elementos da diagonal
 // principal de uma matriz representada por uma lista encadeada
 // de listas encadeadas
 
